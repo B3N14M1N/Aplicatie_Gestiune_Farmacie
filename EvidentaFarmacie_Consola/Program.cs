@@ -10,16 +10,26 @@ namespace Aplicatie_Gestiune_Farmacie
     {
         static void Main(string[] args)
         {
+            string numeFisier=string.Empty;
+            if (args.Length > 0)
+            {
+                numeFisier = args[0];
+            }
+            else
+            {
+                numeFisier = ConfigurationManager.AppSettings["NumeFisier"];
+
+            }
 
             Medicament medicament = new Medicament();
             Farmacie farmacie = new Farmacie();
 
-            string numeFisier = ConfigurationManager.AppSettings["NumeFisier"];
-            AdministrareFarmacie_FisierText adminMedicamente = new AdministrareFarmacie_FisierText(numeFisier);
             int nrMedicamente = 0;
+
             // acest apel ajuta la obtinerea numarului de medicamente inca de la inceputul executiei
             // astfel incat o eventuala adaugare sa atribuie un IdMedicament corect noului medicament
             // iar farmacia este incarcata cu medicamentele din fisier
+            AdministrareFarmacie_FisierText adminMedicamente = new AdministrareFarmacie_FisierText(numeFisier);
             farmacie.AdaugareMedicamente(adminMedicamente.GetMedicamente(out nrMedicamente));
 
             string optiune;
