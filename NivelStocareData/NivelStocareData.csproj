@@ -44,5 +44,11 @@
     <Compile Include="AdministrareData_FisierText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Librarie\Librarie.csproj">
+      <Project>{dcddcc84-eba7-4df3-94e1-b475254c31ef}</Project>
+      <Name>Librarie</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

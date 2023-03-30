@@ -125,7 +125,7 @@ namespace Librarie
         }
         public List<Medicament> CautareMedicamentDupaNume(string nume)
         {
-            return ListaMedicamente.Where(med => med.Nume.Contains(nume)).ToList();
+            return ListaMedicamente.Where(med => med.Nume.ToUpper().Contains(nume.ToUpper())).ToList();
         }
         public List<Medicament> CautareMedicamentDupaPret(decimal pret)
         {
@@ -133,7 +133,12 @@ namespace Librarie
         }
         public Medicament CautareMedicamentDupaID(int id)
         {
-            return (Medicament)ListaMedicamente.Where(med => med.Id == id);
+            foreach(Medicament med in ListaMedicamente)
+            {
+                if (med.Id == id)
+                    return med;
+            }
+            return null;
         }
         public override string ToString()
         {

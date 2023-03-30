@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -48,6 +49,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Librarie\Librarie.csproj">
+      <Project>{dcddcc84-eba7-4df3-94e1-b475254c31ef}</Project>
+      <Name>Librarie</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NivelStocareData\NivelStocareData.csproj">
+      <Project>{be45264f-4e5b-4317-afe7-91ffa7d5c766}</Project>
+      <Name>NivelStocareData</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
