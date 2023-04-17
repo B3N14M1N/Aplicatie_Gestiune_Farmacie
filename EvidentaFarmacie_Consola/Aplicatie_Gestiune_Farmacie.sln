@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Librarie", "..\Librarie\Lib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NivelStocareData", "..\NivelStocareData\NivelStocareData.csproj", "{BE45264F-4E5B-4317-AFE7-91FFA7D5C766}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfataUtilizator_WindowsForms", "..\InterfataUtilizator_WindowsForms\InterfataUtilizator_WindowsForms.csproj", "{40DE06D3-1C10-4971-AE00-476762E87124}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BE45264F-4E5B-4317-AFE7-91FFA7D5C766} = {BE45264F-4E5B-4317-AFE7-91FFA7D5C766}
+		{DCDDCC84-EBA7-4DF3-94E1-B475254C31EF} = {DCDDCC84-EBA7-4DF3-94E1-B475254C31EF}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +33,10 @@ Global
 		{BE45264F-4E5B-4317-AFE7-91FFA7D5C766}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE45264F-4E5B-4317-AFE7-91FFA7D5C766}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE45264F-4E5B-4317-AFE7-91FFA7D5C766}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40DE06D3-1C10-4971-AE00-476762E87124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40DE06D3-1C10-4971-AE00-476762E87124}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40DE06D3-1C10-4971-AE00-476762E87124}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40DE06D3-1C10-4971-AE00-476762E87124}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
