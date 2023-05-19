@@ -28,7 +28,10 @@ namespace NivelStocareData
                 pe baza datelor din linia citita si verifica lungimea maxima */
                 while ((linieFisier = streamReader.ReadLine()) != null && list.Count < NR_MAX_MEDICAMENTE)
                 {
-                    list.Add(new Medicament(linieFisier));
+                    if(linieFisier.Length>5) 
+                    {
+                        list.Add(new Medicament(linieFisier));
+                    }
                 }
             }
             NrMedicamente = list.Count;
@@ -43,6 +46,22 @@ namespace NivelStocareData
             {
                 streamWriterFisierText.WriteLine(medicament.ConversieLaSir_PentruFisier());
             }
+        }
+        public int GetLastID()
+        {
+            Medicament medicament = null;
+            using (StreamReader streamReader = new StreamReader(numeFisier))
+            {
+                string linieFisier;
+                /* citeste cate o linie si creaza un obiect de tip Medicament
+                pe baza datelor din linia citita si verifica lungimea maxima */
+                while ((linieFisier = streamReader.ReadLine()) != null)
+                {
+                    if(linieFisier.Length > 5)
+                        medicament = new Medicament(linieFisier);
+                }
+            }
+            return medicament.Id;
         }
     }
 }

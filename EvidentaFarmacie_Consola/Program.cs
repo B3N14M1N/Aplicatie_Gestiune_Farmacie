@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Text.RegularExpressions;
 using Librarie;
+using Librarie.Enumerari;
 using NivelStocareData;
 
 namespace Aplicatie_Gestiune_Farmacie
@@ -42,6 +44,7 @@ namespace Aplicatie_Gestiune_Farmacie
                 Console.WriteLine("C. Cautare medicament dupa ID"); //0
                 Console.WriteLine("K. Cautare medicament dupa nume");//1
                 Console.WriteLine("P. Cautare medicament dupa pret");//2
+                Console.WriteLine("T. Cautare medicament dupa tip");//3
                 Console.WriteLine("X. Inchidere program");
 
                 Console.WriteLine("Alegeti o optiune");
@@ -94,6 +97,10 @@ namespace Aplicatie_Gestiune_Farmacie
                         CautareMedicament(2, farmacie);
 
                         break;
+                    case "T": // Cautare dupa TIP
+                        CautareMedicament(3, farmacie);
+
+                        break;
                     case "X":
 
                         return;
@@ -110,13 +117,38 @@ namespace Aplicatie_Gestiune_Farmacie
         {
             Console.WriteLine("Introdu numele:");
             string Nume = Console.ReadLine().Trim();
+
+            Console.WriteLine("Optiuni:" +
+                   "\nPastile = 1" +
+                   "\nFiole = 2" +
+                   "\nCrema = 3" +
+                   "\nSirop = 4" +
+                   "\nCapsule = 5" +
+                   "\nSupozitoare = 6" +
+                   "\nPicături = 7" +
+                   "\nPulbere = 8"+
+                   "\nBandaje = 9");
+            int Cantitate;
+            do
+            {
+                Console.WriteLine("Introdu tipul: ");
+            } while (!int.TryParse(Console.ReadLine().Trim(), out Cantitate) || (Cantitate < 1 || Cantitate > 9));
+            TipMedicament Tip = (TipMedicament)Cantitate;
+
             Console.WriteLine("Introdu descrierea:");
             string Descriere = Console.ReadLine().Trim();
-            Console.WriteLine("Introdu cantitatea:");
-            int Cantitate = Convert.ToInt32(Console.ReadLine().Trim());
-            Console.WriteLine("Introdu pretul:");
-            decimal Pret = Convert.ToDecimal(Console.ReadLine().Trim());
-            return new Medicament(0,Nume,Descriere,Cantitate,Pret);
+
+            do
+            {
+                Console.WriteLine("Introdu cantitatea:");
+            } while (!int.TryParse(Console.ReadLine().Trim(), out Cantitate) || Cantitate < 0);
+            decimal Pret;
+            do
+            {
+                Console.WriteLine("Introdu pretul:");
+            } while (!decimal.TryParse(Console.ReadLine().Trim(),out Pret) || Pret < 0);
+
+            return new Medicament(0, Nume, Tip, Descriere, Cantitate, Pret);
         }
         static void AfisareMedicament(Medicament medicament)
         {
@@ -158,19 +190,52 @@ namespace Aplicatie_Gestiune_Farmacie
 
                     break;
                 case 2: // Cautare dupa PRET
-                    Console.WriteLine("Introdu ID-ul:");
-                    decimal pret = Convert.ToDecimal(Console.ReadLine().Trim());
-                    if (farmacie.CautareMedicamentDupaPret(pret).Count != 0)
+                    decimal Pret;
+                    do
+                    {
+                        Console.WriteLine("Introdu pretul:");
+                    } while (!decimal.TryParse(Console.ReadLine().Trim(), out Pret) || Pret < 0);
+                    if (farmacie.CautareMedicamentDupaPret(Pret).Count != 0)
                     {
                         List<Medicament> list = new List<Medicament>();
-                        list = farmacie.CautareMedicamentDupaPret(pret);
+                        list = farmacie.CautareMedicamentDupaPret(Pret);
                         foreach (Medicament med in list)
                         {
                             Console.WriteLine(med.ToString());
                         }
                     }
                     else
-                        Console.WriteLine($"Nu au fost gasite medicamente cu pretul {pret}");
+                        Console.WriteLine($"Nu au fost gasite medicamente cu pretul {Pret}");
+
+                    break;
+                case 3: // Cautare dupa TIP
+                    Console.WriteLine("Optiuni:" +
+                    "\nPastile = 1" +
+                    "\nFiole = 2" +
+                    "\nCrema = 3" +
+                    "\nSirop = 4" +
+                    "\nCapsule = 5" +
+                    "\nSupozitoare = 6" +
+                    "\nPicături = 7" +
+                    "\nPulbere = 8" +
+                    "\nBandaje = 9");
+                    int val;
+                    do
+                    {
+                        Console.WriteLine("Introdu tipul: ");
+                    } while (!int.TryParse(Console.ReadLine(), out val) || (val < 1 || val > 9));
+                    TipMedicament tip = (TipMedicament)val;
+                    if (farmacie.CautareMedicamentDupaTip(tip).Count != 0)
+                    {
+                        List<Medicament> list = new List<Medicament>();
+                        list = farmacie.CautareMedicamentDupaTip(tip);
+                        foreach (Medicament med in list)
+                        {
+                            Console.WriteLine(med.ToString());
+                        }
+                    }
+                    else
+                        Console.WriteLine($"Nu au fost gasite medicamente de tipul {tip.ToString()}");
 
                     break;
             }
