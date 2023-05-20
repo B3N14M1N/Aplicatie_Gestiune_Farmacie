@@ -32,6 +32,8 @@ namespace InterfataUtilizator_WindowsForms
         private Label[] lblsCantitate;
         private Label[] lblsPret;
 
+        private Panel pnlMedicamente;
+
         private const int LATIME_CONTROL = 100;
         private const int DIMENSIUNE_PAS_Y = 50;
         private const int DIMENSIUNE_PAS_X = 120;
@@ -47,12 +49,18 @@ namespace InterfataUtilizator_WindowsForms
             InitializeComponent();
 
             //setare proprietati
-            this.Size = new Size(600, 750);
+            this.Size = new Size(OFFSET_X, 750);
             this.StartPosition = FormStartPosition.Manual;
             Size size = Screen.FromControl(this).WorkingArea.Size - this.Size;
             this.Location = new Point(size.Width/2,size.Height/2);
             this.Font = new Font("Arial", 9, FontStyle.Bold);
             this.Text = "Informatii Medicamente";
+            pnlMedicamente = new Panel();
+            pnlMedicamente.Size = new Size(5 * DIMENSIUNE_PAS_X, this.Height);
+            pnlMedicamente.Location=new Point(OFFSET_X,0);
+            pnlMedicamente.BackColor = Color.Transparent;
+            pnlMedicamente.Visible= false;
+            this.Controls.Add(pnlMedicamente);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -60,45 +68,46 @@ namespace InterfataUtilizator_WindowsForms
         }
         private void AfiseazaMedicamente()
         {
+            pnlMedicamente.Visible = true;
             //adaugare control de tip Label pentru 'Nume';
             lblHeaderNume = new Label();
             lblHeaderNume.Width = LATIME_CONTROL;
             lblHeaderNume.Text = "Nume";
-            lblHeaderNume.Left = OFFSET_X + 0;
+            lblHeaderNume.Left = 0;
             lblHeaderNume.ForeColor = Color.DarkGreen;
-            this.Controls.Add(lblHeaderNume);
+            pnlMedicamente.Controls.Add(lblHeaderNume);
 
             //adaugare control de tip Label pentru 'Tip';
             lblHeaderTip = new Label();
             lblHeaderTip.Width = LATIME_CONTROL;
             lblHeaderTip.Text = "Tip";
-            lblHeaderTip.Left = OFFSET_X + DIMENSIUNE_PAS_X;
+            lblHeaderTip.Left = DIMENSIUNE_PAS_X;
             lblHeaderTip.ForeColor = Color.DarkGreen;
-            this.Controls.Add(lblHeaderTip);
+            pnlMedicamente.Controls.Add(lblHeaderTip);
 
             //adaugare control de tip Label pentru 'Descriere';
             lblHeaderDescriere = new Label();
             lblHeaderDescriere.Width = LATIME_CONTROL;
             lblHeaderDescriere.Text = "Descriere";
-            lblHeaderDescriere.Left = OFFSET_X + 2 * DIMENSIUNE_PAS_X;
+            lblHeaderDescriere.Left = 2 * DIMENSIUNE_PAS_X;
             lblHeaderDescriere.ForeColor = Color.DarkGreen;
-            this.Controls.Add(lblHeaderDescriere);
+            pnlMedicamente.Controls.Add(lblHeaderDescriere);
 
             //adaugare control de tip Label pentru 'Cantitate';
             lblHeaderCantitate = new Label();
             lblHeaderCantitate.Width = LATIME_CONTROL;
             lblHeaderCantitate.Text = "Cantitate";
-            lblHeaderCantitate.Left = OFFSET_X + 3 * DIMENSIUNE_PAS_X;
+            lblHeaderCantitate.Left = 3 * DIMENSIUNE_PAS_X;
             lblHeaderCantitate.ForeColor = Color.DarkGreen;
-            this.Controls.Add(lblHeaderCantitate);
+            pnlMedicamente.Controls.Add(lblHeaderCantitate);
 
             //adaugare control de tip Label pentru 'Pret';
             lblHeaderPret = new Label();
             lblHeaderPret.Width = LATIME_CONTROL;
             lblHeaderPret.Text = "Pret";
-            lblHeaderPret.Left = OFFSET_X + 4 * DIMENSIUNE_PAS_X;
+            lblHeaderPret.Left = 4 * DIMENSIUNE_PAS_X;
             lblHeaderPret.ForeColor = Color.DarkGreen;
-            this.Controls.Add(lblHeaderPret);
+            pnlMedicamente.Controls.Add(lblHeaderPret);
 
             int nrMedicamente = 0;
             ArrayList medicamente = new ArrayList(adminMedicamente.GetMedicamente(out nrMedicamente));
@@ -118,17 +127,17 @@ namespace InterfataUtilizator_WindowsForms
                 lblsNume[i].Text = medicament.Nume;
                 lblsNume[i].MaximumSize = new Size(100, 0);
                 lblsNume[i].AutoSize= true;
-                lblsNume[i].Left = OFFSET_X + 0;
+                lblsNume[i].Left = 0;
                 lblsNume[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsNume[i]);
+                pnlMedicamente.Controls.Add(lblsNume[i]);
 
                 //adaugare control de tip Label pentru tipul medicamentelor
                 lblsTip[i] = new Label();
                 lblsTip[i].Width = LATIME_CONTROL;
                 lblsTip[i].Text = medicament.Tip.ToString();
-                lblsTip[i].Left = OFFSET_X + DIMENSIUNE_PAS_X;
+                lblsTip[i].Left = DIMENSIUNE_PAS_X;
                 lblsTip[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsTip[i]);
+                pnlMedicamente.Controls.Add(lblsTip[i]);
 
                 //adaugare control de tip Label pentru descrierea medicamentelor
                 lblsDescriere[i] = new Label();
@@ -136,35 +145,37 @@ namespace InterfataUtilizator_WindowsForms
                 lblsDescriere[i].Text = medicament.Descriere;
                 lblsDescriere[i].MaximumSize = new Size(100, 0);
                 lblsDescriere[i].AutoSize = true;
-                lblsDescriere[i].Left = OFFSET_X + 2 * DIMENSIUNE_PAS_X;
+                lblsDescriere[i].Left = 2 * DIMENSIUNE_PAS_X;
                 lblsDescriere[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsDescriere[i]);
+                pnlMedicamente.Controls.Add(lblsDescriere[i]);
 
                 //adaugare control de tip Label pentru cantitatea medicamentelor
                 lblsCantitate[i] = new Label();
                 lblsCantitate[i].Width = LATIME_CONTROL;
                 lblsCantitate[i].Text = medicament.Cantitate.ToString();
-                lblsCantitate[i].Left = OFFSET_X + 3 * DIMENSIUNE_PAS_X;
+                lblsCantitate[i].Left = 3 * DIMENSIUNE_PAS_X;
                 lblsCantitate[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsCantitate[i]);
+                pnlMedicamente.Controls.Add(lblsCantitate[i]);
 
                 //adaugare control de tip Label pentru pretul medicamentelor
                 lblsPret[i] = new Label();
                 lblsPret[i].Width = LATIME_CONTROL;
                 lblsPret[i].Text = medicament.Pret.ToString();
-                lblsPret[i].Left = OFFSET_X + 4 * DIMENSIUNE_PAS_X;
+                lblsPret[i].Left = 4 * DIMENSIUNE_PAS_X;
                 lblsPret[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsPret[i]);
+                pnlMedicamente.Controls.Add(lblsPret[i]);
                 i++;
             }
+            pnlMedicamente.Height = (i + 1) * DIMENSIUNE_PAS_Y;
         }
         private void BtnAfiseaza_Click(object sender, EventArgs e)
         {
             AfiseazaMedicamente();
-            this.Width = OFFSET_X * 2;
+            this.Width = OFFSET_X + 5 * DIMENSIUNE_PAS_X;
         }
         private void BtnAscunde_Click(object sender, EventArgs e)
         {
+            pnlMedicamente.Visible = false;
             this.Width = OFFSET_X;
         }
         private void BtnAdauga_Click(object sender, EventArgs e)
@@ -187,36 +198,25 @@ namespace InterfataUtilizator_WindowsForms
                 return false;
             }
             else
-            {
                 lblNume.ForeColor = Color.Black;
-            }
-            if (txtDescriere.Text.Trim().Length < 1)
-            {
+            if (txtDescriere.Text.Trim().Length < 1) {
                 lblDescriere.ForeColor = Color.Red;
                 return false;
             }
             else
-            {
                 lblDescriere.ForeColor = Color.Black;
-            }
-            if(numericUpDownCantitate.Value<=0)
-            {
+            if (numericUpDownCantitate.Value <= 0) {
                 lblCantitate.ForeColor = Color.Red;
                 return false;
             }
             else
-            {
                 lblCantitate.ForeColor= Color.Black;
-            }
-            if(numericUpDownPret.Value<=0)
-            {
+            if (numericUpDownPret.Value <= 0) {
                 lblPret.ForeColor = Color.Red;
                 return false;
             }
             else
-            {
                 lblPret.ForeColor= Color.Black;
-            }
             return true;
         }
         private void ResetareControale()

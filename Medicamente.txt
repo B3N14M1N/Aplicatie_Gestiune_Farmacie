@@ -14,3 +14,4 @@
 14;Antiinflamator topic;3;Medicament antiinflamator local;20;22.99
 15;Pansament steril;9;Material de pansament;100;3.99
 16;Detrical;1;Pastile vitamina D;5;16
+17;Aspenter;1;Pastile pentru inima;22;25.50

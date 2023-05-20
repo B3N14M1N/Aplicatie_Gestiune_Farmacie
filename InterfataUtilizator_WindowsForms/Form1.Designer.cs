@@ -292,7 +292,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(584, 711);
+            this.ClientSize = new System.Drawing.Size(534, 711);
             this.Controls.Add(this.btnAfiseaza);
             this.Controls.Add(this.btnAdauga);
             this.Controls.Add(this.rdbContainer);
