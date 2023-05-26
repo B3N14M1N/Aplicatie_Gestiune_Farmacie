@@ -8,7 +8,7 @@ namespace Librarie.Enumerari
 {
     public enum TipMedicament
     {
-        Pastile = 1,
+        Comprimate = 1,
         Fiole = 2,
         Crema = 3,
         Sirop = 4,

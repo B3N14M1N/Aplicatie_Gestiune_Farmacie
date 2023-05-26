@@ -1,17 +1,17 @@
-﻿1;Aspirină;1;Medicament analgezic;50;9.99
-2;Paracetamol;1;Medicament antipiretic;30;7.99
-3;Ibuprofen;1;Medicament antiinflamator;40;12.99
-4;Vitamina C;8;Supliment alimentar;60;14.99
-5;Antibiotic;2;Medicament antibiotic;20;24.99
-6;Ser fiziologic;3;Soluție de curățare;10;6.99
-7;Glicerină;3;Produs pentru îngrijirea pielii;15;8.99
-8;Sirop pentru tuse;4;Medicament pentru tuse;25;11.99
-9;Laxativ;1;Medicament laxativ;30;10.99
-10;Oxigen activ;7;Produs pentru igienă orală;12;17.99
-11;Bandă adezivă;9;Material medical;50;4.99
-12;Antifungic;1;Medicament antifungic;15;16.99
-13;Gel dezinfectant;3;Produs dezinfectant;40;9.99
-14;Antiinflamator topic;3;Medicament antiinflamator local;20;22.99
-15;Pansament steril;9;Material de pansament;100;3.99
-16;Detrical;1;Pastile vitamina D;5;16
-17;Aspenter;1;Pastile pentru inima;22;25.50
+﻿1;Aspirina;1;Medicament analgezic;50;9.99;0 1
+2;Paracetamol;1;Medicament antipiretic;30;7.99;0
+3;Ibuprofen;1;Medicament antiinflamator;40;12.99;
+4;Vitamina C;8;Supliment alimentar;60;14.99;
+5;Antibiotic;2;Medicament antibiotic;20;24.99;1
+6;Ser fiziologic;3;Solutie de curatare;10;6.99;
+7;Glicerina;3;Produs pentru ingrijirea pielii;15;8.99;
+8;Sirop pentru tuse;4;Medicament pentru tuse;25;11.99;
+9;Laxativ;1;Medicament laxativ;30;10.99;0
+10;Oxigen activ;7;Produs pentru igiena orala;12;17.99;1
+11;Banda adeziva;9;Material medical;50;4.99;
+12;Antifungic;1;Medicament antifungic;15;16.99;
+13;Gel dezinfectant;3;Produs dezinfectant;40;9.99;
+14;Antiinflamator topic;3;Medicament antiinflamator local;20;22.99;
+15;Pansament steril;9;Material de pansament;100;3.99;
+16;Detrical;1;Pastile vitamina D;5;16;
+17;Aspenter;1;Pastile pentru inima;22;25.50;

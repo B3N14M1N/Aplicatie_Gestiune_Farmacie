@@ -148,7 +148,7 @@ namespace Aplicatie_Gestiune_Farmacie
                 Console.WriteLine("Introdu pretul:");
             } while (!decimal.TryParse(Console.ReadLine().Trim(),out Pret) || Pret < 0);
 
-            return new Medicament(0, Nume, Tip, Descriere, Cantitate, Pret);
+            return new Medicament(0, Nume, Tip, Descriere, Cantitate, Pret, new OptiuniMedicamente[0]);
         }
         static void AfisareMedicament(Medicament medicament)
         {
