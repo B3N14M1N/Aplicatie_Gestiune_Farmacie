@@ -20,26 +20,15 @@ namespace InterfataUtilizator_WindowsForms
     {
         AdministrareFarmacie_FisierText adminMedicamente;
 
-        private Label lblHeaderNume;
-        private Label lblHeaderTip;
-        private Label lblHeaderDescriere;
-        private Label lblHeaderCantitate;
-        private Label lblHeaderPret;
-        private Label lblHeaderOptiuni;
+        private Farmacie farmacie;
 
-        private Label[] lblsNume;
-        private Label[] lblsTip;
-        private Label[] lblsDescriere;
-        private Label[] lblsCantitate;
-        private Label[] lblsPret;
-        private Label[] lblsOptiuni;
+        private DataGridView medicamenteGridView;
 
-        private Panel pnlMedicamente;
-
-        private const int LATIME_CONTROL = 100;
         private const int DIMENSIUNE_PAS_Y = 50;
         private const int DIMENSIUNE_PAS_X = 120;
         private const int OFFSET_X = 740;
+
+        private Medicament medicamentDeEditat;
 
         ArrayList optiuniSelectate = new ArrayList();
         public Form1()
@@ -48,7 +37,9 @@ namespace InterfataUtilizator_WindowsForms
             string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
             string caleCompletaFisier = locatieFisierSolutie + "\\" + numeFisier;
             adminMedicamente = new AdministrareFarmacie_FisierText(caleCompletaFisier);
-
+            farmacie = new Farmacie();
+            farmacie.AdaugareMedicamente(adminMedicamente.GetMedicamente(out int nrMedicamente));
+            InitializeazaMedicamenteGridView();
             InitializeComponent();
 
             //setare proprietati
@@ -58,175 +49,148 @@ namespace InterfataUtilizator_WindowsForms
             this.Location = new Point(size.Width/2,size.Height/2);
             this.Font = new Font("Arial", 9, FontStyle.Bold);
             this.Text = "Informatii Medicamente";
-            pnlMedicamente = new Panel();
-            pnlMedicamente.Size = new Size(6 * DIMENSIUNE_PAS_X + 10, 700);
-            pnlMedicamente.Location=new Point(OFFSET_X, DIMENSIUNE_PAS_Y);
-            pnlMedicamente.BackColor = Color.WhiteSmoke;
-            pnlMedicamente.Visible= false;
-            pnlMedicamente.AutoScroll = true;
-            this.Controls.Add(pnlMedicamente);
 
-            //adaugare control de tip Label pentru 'Nume';
-            lblHeaderNume = new Label();
-            lblHeaderNume.Width = LATIME_CONTROL;
-            lblHeaderNume.Text = "NUME";
-            lblHeaderNume.Left = OFFSET_X;
-            lblHeaderNume.ForeColor = Color.Black;
-            lblHeaderNume.Visible = false;
-            lblHeaderNume.TextAlign= ContentAlignment.MiddleCenter;
-            this.Controls.Add(lblHeaderNume);
-
-            //adaugare control de tip Label pentru 'Tip';
-            lblHeaderTip = new Label();
-            lblHeaderTip.Width = LATIME_CONTROL;
-            lblHeaderTip.Text = "TIP";
-            lblHeaderTip.Left = OFFSET_X + DIMENSIUNE_PAS_X;
-            lblHeaderTip.ForeColor = Color.Black;
-            lblHeaderTip.Visible = false;
-            lblHeaderTip.TextAlign = ContentAlignment.MiddleCenter;
-            this.Controls.Add(lblHeaderTip);
-
-            //adaugare control de tip Label pentru 'Descriere';
-            lblHeaderDescriere = new Label();
-            lblHeaderDescriere.Width = LATIME_CONTROL;
-            lblHeaderDescriere.Text = "DESCRIERE";
-            lblHeaderDescriere.Left = OFFSET_X + 2 * DIMENSIUNE_PAS_X;
-            lblHeaderDescriere.ForeColor = Color.Black;
-            lblHeaderDescriere.Visible = false;
-            lblHeaderDescriere.TextAlign = ContentAlignment.MiddleCenter;
-            this.Controls.Add(lblHeaderDescriere);
-
-            //adaugare control de tip Label pentru 'Cantitate';
-            lblHeaderCantitate = new Label();
-            lblHeaderCantitate.Width = LATIME_CONTROL;
-            lblHeaderCantitate.Text = "CANTITATE";
-            lblHeaderCantitate.Left = OFFSET_X + 3 * DIMENSIUNE_PAS_X;
-            lblHeaderCantitate.ForeColor = Color.Black;
-            lblHeaderCantitate.Visible = false;
-            lblHeaderCantitate.TextAlign = ContentAlignment.MiddleCenter;
-            this.Controls.Add(lblHeaderCantitate);
-
-            //adaugare control de tip Label pentru 'Pret';
-            lblHeaderPret = new Label();
-            lblHeaderPret.Width = LATIME_CONTROL;
-            lblHeaderPret.Text = "PRET";
-            lblHeaderPret.Left = OFFSET_X + 4 * DIMENSIUNE_PAS_X;
-            lblHeaderPret.ForeColor = Color.Black;
-            lblHeaderPret.Visible = false;
-            lblHeaderPret.TextAlign = ContentAlignment.MiddleCenter;
-            this.Controls.Add(lblHeaderPret);
-
-            //adaugare control de tip Label pentru 'Optiuni';
-            lblHeaderOptiuni = new Label();
-            lblHeaderOptiuni.Width = LATIME_CONTROL;
-            lblHeaderOptiuni.Text = "OPTIUNI";
-            lblHeaderOptiuni.Left = OFFSET_X + 5 * DIMENSIUNE_PAS_X;
-            lblHeaderOptiuni.ForeColor = Color.Black;
-            lblHeaderOptiuni.TextAlign = ContentAlignment.MiddleCenter;
-            lblHeaderOptiuni.Visible = false;
-            this.Controls.Add(lblHeaderOptiuni);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
         }
+        private void InitializeazaMedicamenteGridView()
+        {
+            medicamenteGridView = new DataGridView
+            {
+                TabIndex = 20,
+                Location = new System.Drawing.Point(OFFSET_X - DIMENSIUNE_PAS_X - 65, 10),
+                Size = new Size(5 * DIMENSIUNE_PAS_X + 105, 655),
+                AllowUserToResizeColumns = false,
+                AllowUserToResizeRows = false
+            };
+            medicamenteGridView.RowTemplate.Height = DIMENSIUNE_PAS_Y;
+            medicamenteGridView.ColumnHeadersHeightSizeMode=DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            medicamenteGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            medicamenteGridView.RowsDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            medicamenteGridView.SelectionChanged += MedicamenteGridView_SelectionChanged;
+            this.Controls.Add(medicamenteGridView);
+        }
         private void AfiseazaMedicamente( ArrayList medicamente )
         {
-            int nrMedicamente = medicamente.Count;
-
-            lblsNume = new Label[nrMedicamente];
-            lblsTip = new Label[nrMedicamente];
-            lblsDescriere = new Label[nrMedicamente];
-            lblsCantitate = new Label[nrMedicamente];
-            lblsPret = new Label[nrMedicamente];
-            lblsOptiuni = new Label[nrMedicamente];
-
-            int i = 0;
-            foreach (Medicament medicament in medicamente)
+            medicamenteGridView.ReadOnly = false;
+            medicamenteGridView.Visible = true;
+            medicamenteGridView.DataSource = null;
+            medicamenteGridView.DataSource = medicamente;
+            foreach (DataGridViewColumn col in medicamenteGridView.Columns)
             {
-                //adaugare control de tip Label pentru numele medicamentelor;
-                lblsNume[i] = new Label();
-                lblsNume[i].Width = LATIME_CONTROL;
-                lblsNume[i].Text = medicament.Nume;
-                lblsNume[i].MaximumSize = new Size(100, 0);
-                lblsNume[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblsNume[i].AutoSize= true;
-                lblsNume[i].Left = 0;
-                lblsNume[i].Top = i * DIMENSIUNE_PAS_Y;
-                pnlMedicamente.Controls.Add(lblsNume[i]);
-
-                //adaugare control de tip Label pentru tipul medicamentelor
-                lblsTip[i] = new Label();
-                lblsTip[i].Width = LATIME_CONTROL;
-                lblsTip[i].Text = medicament.Tip.ToString();
-                lblsTip[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblsTip[i].Left = DIMENSIUNE_PAS_X;
-                lblsTip[i].Top = i * DIMENSIUNE_PAS_Y;
-                pnlMedicamente.Controls.Add(lblsTip[i]);
-
-                //adaugare control de tip Label pentru descrierea medicamentelor
-                lblsDescriere[i] = new Label();
-                lblsDescriere[i].Width = LATIME_CONTROL;
-                lblsDescriere[i].Text = medicament.Descriere;
-                lblsDescriere[i].MaximumSize = new Size(100, 0);
-                lblsDescriere[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblsDescriere[i].AutoSize = true;
-                lblsDescriere[i].Left = 2 * DIMENSIUNE_PAS_X;
-                lblsDescriere[i].Top = i * DIMENSIUNE_PAS_Y;
-                pnlMedicamente.Controls.Add(lblsDescriere[i]);
-
-                //adaugare control de tip Label pentru cantitatea medicamentelor
-                lblsCantitate[i] = new Label();
-                lblsCantitate[i].Width = LATIME_CONTROL;
-                lblsCantitate[i].Text = medicament.Cantitate.ToString();
-                lblsCantitate[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblsCantitate[i].Left = 3 * DIMENSIUNE_PAS_X;
-                lblsCantitate[i].Top = i * DIMENSIUNE_PAS_Y;
-                pnlMedicamente.Controls.Add(lblsCantitate[i]);
-
-                //adaugare control de tip Label pentru pretul medicamentelor
-                lblsPret[i] = new Label();
-                lblsPret[i].Width = LATIME_CONTROL;
-                lblsPret[i].Text = medicament.Pret.ToString();
-                lblsPret[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblsPret[i].Left = 4 * DIMENSIUNE_PAS_X;
-                lblsPret[i].Top = i * DIMENSIUNE_PAS_Y;
-                pnlMedicamente.Controls.Add(lblsPret[i]);
-
-                //adaugare control de tip Label pentru optiunile medicamentelor
-                lblsOptiuni[i] = new Label();
-                lblsOptiuni[i].Width = LATIME_CONTROL;
-                lblsOptiuni[i].Text = medicament.OptiuniToStringText();
-                lblsOptiuni[i].TextAlign = ContentAlignment.MiddleCenter;
-                lblsOptiuni[i].AutoSize = true;
-                lblsOptiuni[i].Left = 5 * DIMENSIUNE_PAS_X;
-                lblsOptiuni[i].Top = i * DIMENSIUNE_PAS_Y;
-                pnlMedicamente.Controls.Add(lblsOptiuni[i]);
-
-                i++;
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
             }
+            medicamenteGridView.Columns[0].Width = DIMENSIUNE_PAS_X / 2;
+            medicamenteGridView.Columns[1].Width = DIMENSIUNE_PAS_X + DIMENSIUNE_PAS_X/2;
+            medicamenteGridView.Columns[1].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            medicamenteGridView.Columns[2].Width = DIMENSIUNE_PAS_X + DIMENSIUNE_PAS_X/2;
+            medicamenteGridView.Columns[2].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            medicamenteGridView.Columns[3].Width = DIMENSIUNE_PAS_X / 2;
+            medicamenteGridView.Columns[4].Width = DIMENSIUNE_PAS_X / 2;
+            medicamenteGridView.Columns[6].Width = DIMENSIUNE_PAS_X;
+            medicamenteGridView.Columns[6].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            medicamenteGridView.ClearSelection();
+            medicamenteGridView.ReadOnly = true;
+        }
+        private void BtnSelecteazaCautarea_Click(object sender, EventArgs e)
+        {
+            rdbContainer.Enabled = true;
+            rdbContainer.Visible = true;
+            rdbContainer.Parent = null;
+            panel2.Controls.Add(rdbContainer);
+            rdbContainer.Location = new Point(145,16);
+            rdbContainer.TabIndex = 11;
+            ResetareControaleAdaugare();
+            cmbFiltru.SelectedIndex = 0;
+            lblMesaj.Visible = false;
+            pnlAdauga.Visible = false;
+            pnlAdauga.Enabled = false;
+            pnlCautare.Visible = true;
+            pnlCautare.Enabled = true;
+        }
+        private void BtnSelecteazaAdaugarea_Click(object sender, EventArgs e)
+        {
+            rdbContainer.Enabled = true;
+            rdbContainer.Visible = true;
+            rdbContainer.Parent = null;
+            pnlAdauga.Controls.Add(rdbContainer);
+            rdbContainer.Location = new Point(180, 90);
+            rdbContainer.TabIndex = 2;
+            ResetareControaleCautare();
+            lblCautareMesaj.Visible = false;
+            pnlCautare.Visible = false;
+            pnlCautare.Enabled = false;
+            pnlAdauga.Visible = true;
+            pnlAdauga.Enabled=true;
+        }
+        private void BtnSelecteazaEditarea_Click(object sender, EventArgs e)
+        {
+            rdbContainer.Enabled = true;
+            rdbContainer.Visible = true;
+            rdbContainer.Parent = null;
+            pnlEditare.Controls.Add(rdbContainer);
+            rdbContainer.Location = new Point(180, 90);
+            rdbContainer.TabIndex = 2;
+            btnSalvare.Enabled = true;
+            btnSterge.Enabled = true;
+            medicamentDeEditat = (Medicament)medicamenteGridView.CurrentRow.DataBoundItem;
+            AfiseazaMedicamente(new ArrayList { medicamentDeEditat });
+            txtEditareNume.Text = medicamentDeEditat.Nume;
+            txtEditareDescriere.Text = medicamentDeEditat.Descriere;
+            numericUpDownEditareCantitate.Value = medicamentDeEditat.Cantitate;
+            numericUpDownEditarePret.Value = medicamentDeEditat.Pret;
+            if (medicamentDeEditat.Optiuni != null && medicamentDeEditat.Optiuni.Length > 0)
+            {
+                optiuniSelectate.Clear();
+                if (medicamentDeEditat.Optiuni.Contains(OptiuniMedicamente.CuPrescriptie))
+                {
+                    ckbEditarePrescriptie.Checked = true;
+                    optiuniSelectate.Add(OptiuniMedicamente.CuPrescriptie);
+                }
+                if (medicamentDeEditat.Optiuni.Contains(OptiuniMedicamente.CuDataExpirare))
+                {
+                    ckbEditareExpirare.Checked = true;
+                    optiuniSelectate.Add(OptiuniMedicamente.CuDataExpirare);
+                }
+            }
+            else
+            {
+                optiuniSelectate.Clear();
+                ckbEditarePrescriptie.Checked = false;
+                ckbEditareExpirare.Checked = false;
+            }
+            foreach (RadioButton rdb in rdbContainer.Controls)
+            {
+                rdb.Checked = false;
+            }
+            if (medicamentDeEditat.Tip == TipMedicament.Capsule)
+                rdbCapsule.Checked = true;
+            if (medicamentDeEditat.Tip == TipMedicament.Pulbere)
+                rdbPulbere.Checked = true;
+            if (medicamentDeEditat.Tip == TipMedicament.Sirop)
+                rdbSirop.Checked = true;
+            if (medicamentDeEditat.Tip == TipMedicament.Supozitoare)
+                rdbSupozitoare.Checked = true;
+            if (medicamentDeEditat.Tip == TipMedicament.Bandaje)
+                rdbBandaje.Checked = true;
+            if (medicamentDeEditat.Tip == TipMedicament.Comprimate)
+                rdbComprimate.Checked = true;
+            if (medicamentDeEditat.Tip == TipMedicament.Fiole)
+                rdbFiole.Checked = true;
+            if (medicamentDeEditat.Tip == TipMedicament.Crema)
+                rdbCrema.Checked = true;
+            if (medicamentDeEditat.Tip == TipMedicament.Picaturi)
+                rdbPicaturi.Checked = true;
+            pnlEditare.Enabled = true;
+            pnlEditare.Visible = true;
+            pnlCautare.Enabled = false;
+            pnlCautare.Visible = false;
         }
         private void BtnAfiseaza_Click(object sender, EventArgs e)
         {
-            lblHeaderNume.Visible = true;
-            lblHeaderOptiuni.Visible = true;
-            lblHeaderCantitate.Visible = true;
-            lblHeaderDescriere.Visible = true;
-            lblHeaderPret.Visible = true;
-            lblHeaderTip.Visible = true;
-            pnlMedicamente.Controls.Clear();
-            AfiseazaMedicamente(new ArrayList(adminMedicamente.GetMedicamente(out int nrMedicamente)));
-            pnlMedicamente.Visible = true;
-        }
-        private void BtnAscunde_Click(object sender, EventArgs e)
-        {
-            lblHeaderNume.Visible = false;
-            lblHeaderOptiuni.Visible = false;
-            lblHeaderCantitate.Visible = false;
-            lblHeaderDescriere.Visible = false;
-            lblHeaderPret.Visible = false;
-            lblHeaderTip.Visible = false;
-            pnlMedicamente.Visible = false;
+            AfiseazaMedicamente(new ArrayList(farmacie.Lista()));
         }
         private void BtnAdauga_Click(object sender, EventArgs e)
         {
@@ -246,20 +210,126 @@ namespace InterfataUtilizator_WindowsForms
             Medicament m = new Medicament(adminMedicamente.GetLastID() + 1, txtNume.Text, GetTipMedicamentSelectat(),txtDescriere.Text,Convert.ToInt32(numericUpDownCantitate.Value), numericUpDownPret.Value, optiuniMedicamente);
 
             adminMedicamente.AddMedicament(m);
+            farmacie.AdaugareMedicament(m);
 
-            //resetarea controalelor pentru a introduce datele unui student nou
+            //resetarea controalelor pentru a introduce datele unui medicament nou
             ResetareControaleAdaugare();
             lblMesaj.Visible = true;
             lblMesaj.Text = "ADAUGAT CU SUCCES!";
             lblMesaj.ForeColor= Color.Black;
         }
-        private void pnlAdauga_Click(object sender, EventArgs e)
+        private void BtnCauta_Click(object sender, EventArgs e)
+        {
+            if (!ValidareControaleCautare())
+            {
+                lblCautareMesaj.Visible = true;
+                lblCautareMesaj.Text = "DATE INVALIDE!";
+                lblCautareMesaj.ForeColor = Color.Red;
+                return;
+            }
+            lblCautareMesaj.Visible = false;
+            //Farmacie farmacie= new Farmacie();
+            //farmacie.AdaugareMedicamente(adminMedicamente.GetMedicamente(out int nrMedicamente));
+            ArrayList medicamente = new ArrayList();
+            if (cmbFiltru.SelectedIndex == 0)//NUME
+            {
+                medicamente = new ArrayList(farmacie.CautareMedicamentDupaNume(txtCautareNume.Text));
+            }
+            else
+            if (cmbFiltru.SelectedIndex == 1)//TIP
+            {
+                medicamente = new ArrayList(farmacie.CautareMedicamentDupaTip(GetTipMedicamentSelectat()));
+            }
+            else
+            if (cmbFiltru.SelectedIndex == 2)//PRET
+            {
+                medicamente = new ArrayList(farmacie.CautareMedicamentDupaPret(numericUpDownCautarePret.Value));
+            }
+            if (medicamente.Count > 0)
+            {
+                AfiseazaMedicamente(medicamente);
+                medicamenteGridView.Visible = true;
+            }
+            else
+            {
+                medicamenteGridView.DataSource = null;
+                lblCautareMesaj.Visible = true;
+                lblCautareMesaj.Text = "NU S-AU GASIT MEDICAMENTE CU CERINTELE DORITE!";
+                lblCautareMesaj.ForeColor = Color.Red;
+            }
+        }
+        private void BtnSalveaza_Click(object sender, EventArgs e)
+        {
+            if (!ValidareControaleEditare())
+            {
+                lblEditareMesaj.Visible = true;
+                lblEditareMesaj.Text = "DATE INVALIDE!";
+                lblEditareMesaj.ForeColor = Color.Red;
+                return;
+            }
+            OptiuniMedicamente[] optiuniMedicamente = new OptiuniMedicamente[optiuniSelectate.Count];
+            int i = 0;
+            foreach (int opt in optiuniSelectate)
+            {
+                optiuniMedicamente[i++] = (OptiuniMedicamente)opt;
+            }
+            medicamentDeEditat.Nume = txtEditareNume.Text;
+            medicamentDeEditat.Tip = GetTipMedicamentSelectat();
+            medicamentDeEditat.Descriere = txtEditareDescriere.Text;
+            medicamentDeEditat.Cantitate = Convert.ToInt32(numericUpDownEditareCantitate.Value);
+            medicamentDeEditat.Pret = numericUpDownEditarePret.Value;
+            medicamentDeEditat.Optiuni = optiuniMedicamente;
+
+            farmacie.EditareMedicament(medicamentDeEditat.Id, medicamentDeEditat);
+            adminMedicamente.UpdateMedicamente(farmacie.Lista());
+
+            //resetarea controalelor pentru a introduce datele unui medicament nou
+            lblEditareMesaj.Visible = true;
+            lblEditareMesaj.ForeColor = Color.Black;
+            lblEditareMesaj.Text = "SALVAT CU SUCCES!";
+            AfiseazaMedicamente(new ArrayList { medicamentDeEditat });
+        }
+        private void BtnSterge_Click(object sender, EventArgs e)
+        {
+            string message = "Doresti sa stergi?";
+            string title = "Avertizare";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            DialogResult result = MessageBox.Show(message, title, buttons);
+            if (result == DialogResult.Yes)
+            {
+                farmacie.StergereMedicament(medicamentDeEditat.Id);
+                adminMedicamente.UpdateMedicamente(farmacie.Lista());
+                lblEditareMesaj.Visible = true;
+                lblEditareMesaj.ForeColor = Color.Black;
+                lblEditareMesaj.Text = "MEDICAMENTUL A FOST STERS CU SUCCES!";
+                medicamenteGridView.DataSource = null;
+                btnSalvare.Enabled = false;
+                btnSterge.Enabled = false;
+            }
+        }
+        private void BtnInapoi_Click(object sender, EventArgs e)
+        {
+            rdbContainer.Enabled = true;
+            rdbContainer.Visible = true;
+            rdbContainer.Parent = null;
+            panel2.Controls.Add(rdbContainer);
+            rdbContainer.Location = new Point(145, 16);
+            rdbContainer.TabIndex = 11;
+            medicamenteGridView.DataSource = null;
+            pnlCautare.Enabled = true;
+            pnlCautare.Visible = true;
+            pnlEditare.Enabled = false;
+            pnlEditare.Visible = false;
+        }
+        private void PnlAdauga_Click(object sender, EventArgs e)
         {
             lblMesaj.Visible= false;
         }
-        private void pnlCauta_Click(object sender, EventArgs e)
+        private void PnlCauta_Click(object sender, EventArgs e)
         {
+            ResetareControaleCautare();
             lblCautareMesaj.Visible = false;
+            AfiseazaMedicamente(new ArrayList(farmacie.Lista()));
         }
         private bool ValidareControaleAdaugare()
         {
@@ -289,8 +359,62 @@ namespace InterfataUtilizator_WindowsForms
                 lblPret.ForeColor= Color.Black;
             return true;
         }
+        private bool ValidareControaleCautare()
+        {
+            if (cmbFiltru.SelectedIndex == 0 && txtCautareNume.Text.Trim().Length < 1)
+            {
+                lblCautareNume.ForeColor = Color.Red;
+                return false;
+            }
+            else
+                lblCautareNume.ForeColor = Color.Black;
+            if (cmbFiltru.SelectedIndex == 2 && numericUpDownCautarePret.Value <= 0)
+            {
+                lblCautarePret.ForeColor = Color.Red;
+                return false;
+            }
+            else
+                lblCautarePret.ForeColor = Color.Black;
+            return true;
+        }
+        private bool ValidareControaleEditare()
+        {
+            if (txtEditareNume.Text.Trim().Length < 1)
+            {
+                lblEditareNume.ForeColor = Color.Red;
+                return false;
+            }
+            else
+                lblEditareNume.ForeColor = Color.Black;
+            if (txtEditareDescriere.Text.Trim().Length < 1)
+            {
+                lblEditareDescriere.ForeColor = Color.Red;
+                return false;
+            }
+            else
+                lblEditareDescriere.ForeColor = Color.Black;
+            if (numericUpDownEditareCantitate.Value <= 0)
+            {
+                lblEditareCantitate.ForeColor = Color.Red;
+                return false;
+            }
+            else
+                lblEditareCantitate.ForeColor = Color.Black;
+            if (numericUpDownEditarePret.Value <= 0)
+            {
+                lblEditarePret.ForeColor = Color.Red;
+                return false;
+            }
+            else
+                lblEditarePret.ForeColor = Color.Black;
+            return true;
+        }
         private void ResetareControaleAdaugare()
         {
+            lblNume.ForeColor = Color.Black;
+            lblDescriere.ForeColor = Color.Black;
+            lblCantitate.ForeColor = Color.Black;
+            lblPret.ForeColor = Color.Black;
             ckbExpirare.Checked = false;
             ckbPrescriptie.Checked = false;
             txtDescriere.Text = string.Empty;
@@ -310,17 +434,21 @@ namespace InterfataUtilizator_WindowsForms
         }
         private void ResetareControaleCautare()
         {
+            lblCautareNume.ForeColor = Color.Black;
+            lblCautarePret.ForeColor = Color.Black;
+            lblCautareTip.ForeColor = Color.Black;
+
             txtCautareNume.Text = string.Empty;
 
-            rdbCautareBandaje.Checked = false;
-            rdbCautareCapsule.Checked = false;
-            rdbCautareCrema.Checked = false;
-            rdbCautareFiole.Checked = false;
-            rdbCautarePicaturi.Checked = false;
-            rdbCautarePulbere.Checked = false;
-            rdbCautareSirop.Checked = false;
-            rdbCautareSupozitoare.Checked = false;
-            rdbCautareComprimate.Checked = true;
+            rdbBandaje.Checked = false;
+            rdbCapsule.Checked = false;
+            rdbCrema.Checked = false;
+            rdbFiole.Checked = false;
+            rdbPicaturi.Checked = false;
+            rdbPulbere.Checked = false;
+            rdbSirop.Checked = false;
+            rdbSupozitoare.Checked = false;
+            rdbComprimate.Checked = true;
 
             numericUpDownCautarePret.Value = 0;
 
@@ -362,118 +490,20 @@ namespace InterfataUtilizator_WindowsForms
             else
                 optiuniSelectate.Remove(optiuneSelectata);
         }
-        private void BtnSelecteazaCautarea_Click(object sender, EventArgs e)
+        private void MedicamenteGridView_SelectionChanged(object sender, EventArgs e)
         {
-            ResetareControaleAdaugare();
-            cmbFiltru.SelectedIndex = 0;
-            lblMesaj.Visible = false;
-            pnlAdauga.Visible = false;
-            pnlAdauga.Enabled = false;
-            pnlCautare.Visible = true;
-            pnlCautare.Enabled = true;
-        }
-        private void BtnSelecteazaAdaugarea_Click(object sender, EventArgs e)
-        {
-            ResetareControaleCautare();
-            lblCautareMesaj.Visible = false;
-            pnlCautare.Visible = false;
-            pnlCautare.Enabled = false;
-            pnlAdauga.Visible = true;
-            pnlAdauga.Enabled=true;
-        }
-        private TipMedicament GetTipMedicamentCautat()
-        {
-            if (rdbCautareComprimate.Checked)
-                return TipMedicament.Comprimate;
-            if (rdbCautareFiole.Checked)
-                return TipMedicament.Fiole;
-            if (rdbCautareCrema.Checked)
-                return TipMedicament.Crema;
-            if (rdbCautareSirop.Checked)
-                return TipMedicament.Sirop;
-            if (rdbCautareCapsule.Checked)
-                return TipMedicament.Capsule;
-            if (rdbCautareSupozitoare.Checked)
-                return TipMedicament.Supozitoare;
-            if (rdbCautarePicaturi.Checked)
-                return TipMedicament.Picaturi;
-            if (rdbCautarePulbere.Checked)
-                return TipMedicament.Pulbere;
-            if (rdbCautareBandaje.Checked)
-                return TipMedicament.Bandaje;
+            if (medicamenteGridView.SelectedRows.Count > 1)
+            {
+                for (int i = 1; i < medicamenteGridView.SelectedRows.Count; i++)
+                {
+                    medicamenteGridView.SelectedRows[i].Selected = false;
 
-            return TipMedicament.Comprimate;
-        }
-        private void BtnCauta_Click(object sender, EventArgs e)
-        {
-            if (!ValidareControaleCautare())
-            {
-                lblCautareMesaj.Visible = true;
-                lblCautareMesaj.Text = "DATE INVALIDE!";
-                lblCautareMesaj.ForeColor = Color.Red;
-                return;
+                }
             }
-            Farmacie farmacie= new Farmacie();
-            farmacie.AdaugareMedicamente(adminMedicamente.GetMedicamente(out int nrMedicamente));
-            if (cmbFiltru.SelectedIndex == 0)//NUME
-            {
-                lblHeaderNume.Visible = true;
-                lblHeaderOptiuni.Visible = true;
-                lblHeaderCantitate.Visible = true;
-                lblHeaderDescriere.Visible = true;
-                lblHeaderPret.Visible = true;
-                lblHeaderTip.Visible = true;
-                pnlMedicamente.Controls.Clear();
-                AfiseazaMedicamente(new ArrayList(farmacie.CautareMedicamentDupaNume(txtCautareNume.Text)));
-                pnlMedicamente.Visible = true;
-            }
+            if (medicamenteGridView.SelectedRows.Count == 1)
+                btnEditeaza.Enabled = true;
             else
-            if (cmbFiltru.SelectedIndex == 1)//TIP
-            {
-                lblHeaderNume.Visible = true;
-                lblHeaderOptiuni.Visible = true;
-                lblHeaderCantitate.Visible = true;
-                lblHeaderDescriere.Visible = true;
-                lblHeaderPret.Visible = true;
-                lblHeaderTip.Visible = true;
-                pnlMedicamente.Controls.Clear();
-                AfiseazaMedicamente(new ArrayList(farmacie.CautareMedicamentDupaTip(GetTipMedicamentCautat())));
-                pnlMedicamente.Visible = true;
-            }
-            else
-            if (cmbFiltru.SelectedIndex == 2)//PRET
-            {
-                lblHeaderNume.Visible = true;
-                lblHeaderOptiuni.Visible = true;
-                lblHeaderCantitate.Visible = true;
-                lblHeaderDescriere.Visible = true;
-                lblHeaderPret.Visible = true;
-                lblHeaderTip.Visible = true;
-                pnlMedicamente.Controls.Clear();
-                AfiseazaMedicamente(new ArrayList(farmacie.CautareMedicamentDupaPret(numericUpDownCautarePret.Value)));
-                pnlMedicamente.Visible = true;
-            }
-
-            //resetarea controalelor pentru a introduce datele unui student nou
-            ResetareControaleCautare();
-        }
-        private bool ValidareControaleCautare()
-        {
-            if (cmbFiltru.SelectedIndex == 0 && txtCautareNume.Text.Trim().Length < 1)
-            {
-                lblCautareNume.ForeColor = Color.Red;
-                return false;
-            }
-            else
-                lblCautareNume.ForeColor = Color.Black;
-            if (cmbFiltru.SelectedIndex == 2 && numericUpDownCautarePret.Value <= 0)
-            {
-                lblCautarePret.ForeColor = Color.Red;
-                return false;
-            }
-            else
-                lblCautarePret.ForeColor = Color.Black;
-            return true;
+                btnEditeaza.Enabled = false;
         }
     }
 }

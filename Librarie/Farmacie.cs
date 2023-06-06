@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,12 @@ namespace Librarie
         public decimal Pret { get; set; }
         public TipMedicament Tip { get; set; }
         public OptiuniMedicamente[] Optiuni { get; set; }
+        public string OptiuniMedicament {
+            get
+            {
+                return OptiuniToStringText();
+            }
+        }
 
         public Medicament()
         {
@@ -132,7 +139,10 @@ namespace Librarie
         {
             ListaMedicamente = new List<Medicament>();
         }
-
+        public List<Medicament> Lista()
+        {
+            return ListaMedicamente;
+        }
         public void AdaugareMedicament(Medicament medicament)
         {
             ListaMedicamente.Add(medicament);
@@ -147,10 +157,12 @@ namespace Librarie
         }
         public void EditareMedicament(int id, Medicament medicament)
         {
-            Medicament medicamentDeEditat = ListaMedicamente.FirstOrDefault(med => med.Id == id);
-            if (medicamentDeEditat != null)
+            for(int i=0;i<ListaMedicamente.Count;i++)
             {
-                medicamentDeEditat = medicament;
+                if (ListaMedicamente[i].Id == id)
+                {
+                    ListaMedicamente[i] = medicament;
+                }
             }
         }
 

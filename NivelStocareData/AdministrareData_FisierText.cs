@@ -63,6 +63,18 @@ namespace NivelStocareData
             }
             return medicament.Id;
         }
+        public void UpdateMedicamente(List<Medicament> medicamente)
+        {
+            // instructiunea 'using' va apela la final streamWriterFisierText.Close();
+            // al doilea parametru setat la 'false' al constructorului StreamWriter indica
+            // modul 'overwrite' de deschidere al fisierului
+            using (StreamWriter streamWriterFisierText = new StreamWriter(numeFisier, false))
+            {
+                foreach(Medicament medicament in medicamente)
+                    streamWriterFisierText.WriteLine(medicament.ConversieLaSir_PentruFisier());
+            }
+
+        }
     }
 }
 
