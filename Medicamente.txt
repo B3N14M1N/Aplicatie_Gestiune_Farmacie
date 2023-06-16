@@ -7,7 +7,7 @@
 7;Glicerina;3;Produs pentru ingrijirea pielii;15;19.49;0
 8;Sirop pentru tuse;4;Medicament pentru tuse;25;11.99;
 9;Laxativ;1;Medicament laxativ;30;10.99;0
-10;Oxigen activ;7;Produs pentru igiena orala;12;17.99;1
+10;Oxigen activ;7;Produs pentru igiena orala;15;17.99;1
 11;Banda adeziva;9;Material medical;50;4.99;
 12;Antifungic;1;Medicament antifungic;15;16.99;
 13;Gel dezinfectant;3;Produs dezinfectant;40;9.99;
@@ -15,4 +15,4 @@
 15;Pansament steril;9;Material de pansament;100;3.99;
 16;Detrical;1;Pastile vitamina D;5;16;
 17;Aspenter;1;Pastile pentru inima;22;25.50;0
-18;Dercos XL;3;Crema anti-matreata.;6;51.49;0
+18;Dercos;3;Crema anti-matreata.;6;51.49;0 0

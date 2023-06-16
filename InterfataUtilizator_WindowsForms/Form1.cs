@@ -112,6 +112,7 @@ namespace InterfataUtilizator_WindowsForms
         }
         private void BtnSelecteazaAdaugarea_Click(object sender, EventArgs e)
         {
+            optiuniSelectate.Clear();
             rdbContainer.Enabled = true;
             rdbContainer.Visible = true;
             rdbContainer.Parent = null;
@@ -127,6 +128,7 @@ namespace InterfataUtilizator_WindowsForms
         }
         private void BtnSelecteazaEditarea_Click(object sender, EventArgs e)
         {
+            optiuniSelectate.Clear();
             rdbContainer.Enabled = true;
             rdbContainer.Visible = true;
             rdbContainer.Parent = null;
@@ -143,7 +145,6 @@ namespace InterfataUtilizator_WindowsForms
             numericUpDownEditarePret.Value = medicamentDeEditat.Pret;
             if (medicamentDeEditat.Optiuni != null && medicamentDeEditat.Optiuni.Length > 0)
             {
-                optiuniSelectate.Clear();
                 if (medicamentDeEditat.Optiuni.Contains(OptiuniMedicamente.CuPrescriptie))
                 {
                     ckbEditarePrescriptie.Checked = true;
@@ -157,7 +158,6 @@ namespace InterfataUtilizator_WindowsForms
             }
             else
             {
-                optiuniSelectate.Clear();
                 ckbEditarePrescriptie.Checked = false;
                 ckbEditareExpirare.Checked = false;
             }
@@ -267,11 +267,23 @@ namespace InterfataUtilizator_WindowsForms
                 lblEditareMesaj.ForeColor = Color.Red;
                 return;
             }
-            OptiuniMedicamente[] optiuniMedicamente = new OptiuniMedicamente[optiuniSelectate.Count];
-            int i = 0;
-            foreach (int opt in optiuniSelectate)
+            OptiuniMedicamente[] optiuniMedicamente=new OptiuniMedicamente[0];
+            if(ckbEditarePrescriptie.Checked || ckbEditareExpirare.Checked)
             {
-                optiuniMedicamente[i++] = (OptiuniMedicamente)opt;
+                if(ckbEditarePrescriptie.Checked== ckbEditareExpirare.Checked)
+                {
+                    optiuniMedicamente = new OptiuniMedicamente[2];
+                    optiuniMedicamente[0] = OptiuniMedicamente.CuPrescriptie;
+                    optiuniMedicamente[1] = OptiuniMedicamente.CuDataExpirare;
+                }
+                else
+                {
+                    optiuniMedicamente = new OptiuniMedicamente[1];
+                    if(ckbEditarePrescriptie.Checked)
+                        optiuniMedicamente[0] = OptiuniMedicamente.CuPrescriptie;
+                    else
+                        optiuniMedicamente[0] = OptiuniMedicamente.CuDataExpirare;
+                }
             }
             medicamentDeEditat.Nume = txtEditareNume.Text;
             medicamentDeEditat.Tip = GetTipMedicamentSelectat();
@@ -309,6 +321,8 @@ namespace InterfataUtilizator_WindowsForms
         }
         private void BtnInapoi_Click(object sender, EventArgs e)
         {
+
+            ResetareControaleRadioButton();
             rdbContainer.Enabled = true;
             rdbContainer.Visible = true;
             rdbContainer.Parent = null;
@@ -419,15 +433,7 @@ namespace InterfataUtilizator_WindowsForms
             ckbPrescriptie.Checked = false;
             txtDescriere.Text = string.Empty;
             txtNume.Text = string.Empty;
-            rdbBandaje.Checked = false;
-            rdbCapsule.Checked = false;
-            rdbCrema.Checked = false;
-            rdbFiole.Checked = false;
-            rdbPicaturi.Checked = false;
-            rdbPulbere.Checked = false;
-            rdbSirop.Checked = false;
-            rdbSupozitoare.Checked = false;
-            rdbComprimate.Checked = true;
+            ResetareControaleRadioButton();
             numericUpDownCantitate.Value = 0;
             numericUpDownPret.Value = 0;
 
@@ -439,7 +445,13 @@ namespace InterfataUtilizator_WindowsForms
             lblCautareTip.ForeColor = Color.Black;
 
             txtCautareNume.Text = string.Empty;
+            ResetareControaleRadioButton();
 
+            numericUpDownCautarePret.Value = 0;
+
+        }
+        private void ResetareControaleRadioButton()
+        {
             rdbBandaje.Checked = false;
             rdbCapsule.Checked = false;
             rdbCrema.Checked = false;
@@ -449,9 +461,6 @@ namespace InterfataUtilizator_WindowsForms
             rdbSirop.Checked = false;
             rdbSupozitoare.Checked = false;
             rdbComprimate.Checked = true;
-
-            numericUpDownCautarePret.Value = 0;
-
         }
         private TipMedicament GetTipMedicamentSelectat()
         {
@@ -486,7 +495,10 @@ namespace InterfataUtilizator_WindowsForms
 
             //verificare daca checkbox-ul asupra caruia s-a actionat este selectat
             if (checkBoxControl.Checked == true)
-                optiuniSelectate.Add(optiuneSelectata);
+            {
+                if(!optiuniSelectate.Contains(optiuneSelectata))
+                    optiuniSelectate.Add(optiuneSelectata);
+            }
             else
                 optiuniSelectate.Remove(optiuneSelectata);
         }
@@ -497,7 +509,6 @@ namespace InterfataUtilizator_WindowsForms
                 for (int i = 1; i < medicamenteGridView.SelectedRows.Count; i++)
                 {
                     medicamenteGridView.SelectedRows[i].Selected = false;
-
                 }
             }
             if (medicamenteGridView.SelectedRows.Count == 1)

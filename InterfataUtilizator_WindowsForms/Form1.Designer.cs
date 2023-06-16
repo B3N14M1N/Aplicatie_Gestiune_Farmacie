@@ -607,6 +607,7 @@
             // 
             // cmbFiltru
             // 
+            this.cmbFiltru.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFiltru.FormattingEnabled = true;
             this.cmbFiltru.Items.AddRange(new object[] {
             "NUME",
